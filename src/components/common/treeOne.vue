@@ -3,14 +3,23 @@
         <el-tree 
         :data="data" 
         :props="defaultProps" 
-        @node-click="handleNodeClick"
+        node-key="id"
+        
         :expand-on-click-node="false"
+        :default-expanded-keys="[1]"
         >
         <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>
-                 <i class="fa" :class="data.type ==='oz'?'fa-folder-open':'fa-bookmark'"></i>
+            
+            <el-radio-group v-model="radio">
+                <el-radio :label="node.id" @change="handleNodeClick(node, data)">
+                    <i class="fa" :class="data.type ==='oz'?'fa-folder-open':'fa-bookmark'"></i>
+                    &nbsp;{{node.label}}
+                </el-radio>
+            </el-radio-group>
+            <!-- <span>
+                <i class="fa" :class="data.type ==='oz'?'fa-folder-open':'fa-bookmark'"></i>
                 {{node.label}}
-            </span>
+            </span> -->
         </span>
         </el-tree>
     </div>
@@ -23,6 +32,7 @@
         ],
         data() {
             return {
+                radio:'',
                 data:this.datalist,
                 defaultProps: {
                     children: 'children',
@@ -32,8 +42,9 @@
             }
         },
         methods:{
-            handleNodeClick(data) {
-                console.log(data.type);
+            handleNodeClick(node,data) {
+                console.log(data);
+                this.$emit('handleTree',data);
             }
         }
     }

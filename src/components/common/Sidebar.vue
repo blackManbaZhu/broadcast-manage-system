@@ -201,7 +201,8 @@
             initMenu() {
                 let path  = this.$route.path.replace('/','');
                 let title = '';
-                let arr   = this.items.filter(function (d) {
+                let arr   = [];
+                arr   = this.items.filter(function (d) {
                     if( d.index != path && d.subs != undefined && d.subs ) {
                         for(let i=0;i<d.subs.length;i++){
                             if(d.subs[i].index == path){
@@ -233,6 +234,7 @@
         top: 60px;
         bottom:0;
         background: #2E363F;
+        overflow-y: scroll;
     }
     .sidebar > ul {
         height:100%;

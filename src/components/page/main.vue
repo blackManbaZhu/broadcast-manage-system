@@ -172,7 +172,7 @@
   .info{
     padding: 14px;
     float: left;
-    width: 90%;
+    width: 100%;
   }
   .info .span{
       font-size: 18px;

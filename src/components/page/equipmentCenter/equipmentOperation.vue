@@ -1,13 +1,13 @@
 <template>
     <div>
-        <el-container>
+        <el-container v-show="!showSettings">
             <el-aside width="360px" class="left">
                 <div class="tree">
-                    <v-tree :datalist="treeList"></v-tree>
+                    <v-tree :datalist="treeList" @handleTree="handleNode"></v-tree>
                 </div>
                 <div class="bottom">
-                    <el-button type="info" plain>机构直播</el-button>
-                    <el-button type="info" plain>批量机构操作</el-button>
+                    <el-button type="info" plain @click="organizationLive()">机构直播</el-button>
+                    <el-button type="info" plain @click="organizationHandle()">批量机构操作</el-button>
                 </div>
             </el-aside>
             <el-main class="right">
@@ -43,171 +43,244 @@
                     </el-select>
                 </div>
                 <div class="table">
-                    <v-table :tableData="tableList"></v-table>
+                    <el-table
+                        :data="tableList"
+                        height="450"
+                        border
+                        style="width: 100%;"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                        type="selection"
+                        header-align="center"
+                        width="45">
+                        </el-table-column>
+                        <el-table-column
+                        prop="name"
+                        label="设备名称"
+                        header-align="center"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="code"
+                        label="设备编号"
+                        header-align="center"
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="network"
+                        header-align="center"
+                        label="网络类型">
+                        </el-table-column>
+                        <el-table-column
+                        prop="status"
+                        header-align="center"
+                        label="状态">
+                        </el-table-column>
+                        <el-table-column
+                        prop="signal"
+                        header-align="center"
+                        label="信号">
+                        <i class="fa fa-circle"></i>
+                        </el-table-column>
+                        <el-table-column
+                        prop="versions"
+                        header-align="center"
+                        label="版本号">
+                        </el-table-column>
+                        <el-table-column
+                        header-align="center"
+                        label="操作"
+                        >
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.$index, scope.row)" type="text"><i class="fa fa-file-text"></i></el-button>
+                                <el-button type="text"><i class="fa fa-file-text-o"></i></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- 分页 -->
+                    <el-pagination
+                        style="margin-top:15px;float:right;"
+                        background
+                        @current-change="handleCurrentChange"
+                        :page-size="pageInfo.currentPage"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pageInfo.total">
+                    </el-pagination>
                 </div>
                 <div class="bottom">
-                    <span class="selectSpan">已选择<i>0</i>个设备</span>
+                    <span class="selectSpan">已选择<span>0</span>个设备</span>
                     <el-button type="primary" plain>进入直播</el-button>
                     <el-button type="primary" plain>操作选中设备</el-button>
                 </div>
             </el-main>
         </el-container>
+        <v-settings v-show="showSettings"></v-settings>
     </div>
 </template>
 
 <script>
     import vTree  from '../../common/treeOne.vue';
-    import vTable from "./table.vue";
+    import vSettings from "./operationSetting.vue";
+    let dataList = [
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        },
+        {
+            name:'设备1',
+            code:'01',
+            network:'有线',
+            status:'离线',
+            signal:0,
+            versions:'v1.1.1'
+        }
+                    
+    ];
+    let option1 =[
+        {
+            value:'全部',
+            label:'全部'
+        },
+        {
+            value:'有线',
+            label:'有线'
+        },
+        {
+            value:'3/4G网络',
+            label:'3/4G网络'
+        },
+        {
+            value:'适配器',
+            label:'适配器'
+        },
+        {
+            value:'物联网',
+            label:'物联网'
+        }
+    ];
+    let option2 = [
+        {
+            value:'全部状态',
+            label:'全部状态'
+        },
+        {
+            value:'在线',
+            label:'在线'
+        },
+        {
+            value:'在播',
+            label:'在播'
+        },
+        {
+            value:'下载',
+            label:'下载'
+        },
+        {
+            value:'锁定',
+            label:'锁定'
+        },
+        {
+            value:'离线',
+            label:'离线'
+        }
+    ];
     export default { 
         components:{
-            vTree,vTable
+            vTree,vSettings
         },
         data() {
             return {
+                showSettings:false,
                 selectValue1:'',
                 selectValue2:'',
                 selectValue3:'',
                 inputSeach:'',
+                checkedTree:'',
                 treeList:[],
-                tableList:[
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    },
-                    {
-                        name:'设备1',
-                        code:'01',
-                        network:'有线',
-                        status:'离线',
-                        signal:0,
-                        versions:'v1.1.1'
-                    }
-                    
-                ],
-                options1:[
-                    {
-                        value:'全部',
-                        label:'全部'
-                    },
-                    {
-                        value:'有线',
-                        label:'有线'
-                    },
-                    {
-                        value:'3/4G网络',
-                        label:'3/4G网络'
-                    },
-                    {
-                        value:'适配器',
-                        label:'适配器'
-                    },
-                    {
-                        value:'物联网',
-                        label:'物联网'
-                    }
-                ],
-                options2:[
-                    {
-                        value:'全部状态',
-                        label:'全部状态'
-                    },
-                    {
-                        value:'在线',
-                        label:'在线'
-                    },
-                    {
-                        value:'在播',
-                        label:'在播'
-                    },
-                    {
-                        value:'下载',
-                        label:'下载'
-                    },
-                    {
-                        value:'锁定',
-                        label:'锁定'
-                    },
-                    {
-                        value:'离线',
-                        label:'离线'
-                    }
-                ],
+                multipleSelection:[],
+                pageInfo:{
+                    total:100,
+                    currentPage: 10,
+                }, 
+                tableList:dataList,
+                options1:option1,
+                options2:option2,
                 options3:[ 10, 20, 50, 100]
             }
         },
@@ -218,8 +291,41 @@
             initdata() {
                 const list = JSON.parse(localStorage.getItem('data-list')) || [];
                 this.treeList = list;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            handleCurrentChange(val) {
+
+            },
+            handleClick(index,row) {
+            
+            },
+            handleNode(data) {
+                this.checkedTree = data;
+            },
+            organizationLive() { //机构直播
+                if(this.checkedTree){
+                    console.log("选中")
+                }else{
+                    this.$confirm('请选择要操作的机构', '提示', {type: 'error'});
+                }
+            },
+            organizationHandle() { //批量操作机构
+                if(this.checkedTree){
+                    let _this = this;
+                    this.$confirm('如果信息不强，有些操作可能会有延迟?', '提示', {
+                        type: 'warning'
+                    }).then(() => {
+                        _this.showSettings = true;
+                    }).catch(() => {
+
+                    });
+                }else{
+                    this.$confirm('请选择要操作的机构', '提示', {type: 'error'});
+                }
             }
-        }
+        } 
     }
 </script>
 

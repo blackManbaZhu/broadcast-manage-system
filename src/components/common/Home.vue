@@ -61,3 +61,10 @@
         }
     }
 </script>
+
+<style>
+ .el-container{
+     min-width: 1300px;
+ }
+</style>
+

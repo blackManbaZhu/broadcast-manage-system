@@ -134,13 +134,13 @@ export default {
       position: absolute;
       top: 50%;
       left: 50%;
-      margin-left: -218px;
+      margin-left: -200px;
       margin-top: -240px;
      -webkit-border-radius: 5px;
      border-radius: 5px;
      -moz-border-radius: 5px;
      background-clip: padding-box;
-     width: 360px;
+     width: 400px;
      padding: 35px 35px 15px 35px;
      background: #fff;
      border: 1px solid #eaeaea;

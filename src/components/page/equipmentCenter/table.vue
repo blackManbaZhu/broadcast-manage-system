@@ -48,7 +48,7 @@
             header-align="center"
             label="操作"
             >
-             <template slot-scope="scope">
+            <template slot-scope="scope">
                 <el-button @click="handleClick(scope.$index, scope.row)" type="text"><i class="fa fa-file-text"></i></el-button>
                 <el-button type="text"><i class="fa fa-file-text-o"></i></el-button>
             </template>
@@ -72,6 +72,7 @@ export default {
     ],
     data() {
         return {
+            handlePageop:this.handlePage,
             tableList:this.tableData,
             multipleSelection:[],
             pageInfo:{
@@ -88,7 +89,7 @@ export default {
 
         },
         handleClick(index,row) {
-
+           
         }
     }
 }
