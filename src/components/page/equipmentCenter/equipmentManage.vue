@@ -11,7 +11,7 @@
             </el-aside>
             <el-main class="right">
                 <div class="top">
-                    <el-button type="primary" plain><i class="fa fa-plus-square"></i>&nbsp; 添加设备</el-button>
+                    <el-button type="primary" plain @click="addBtn"><i class="fa fa-plus-square"></i>&nbsp; 添加设备</el-button>
                     <el-button type="text" size="small" >未分配设备</el-button>
                     <el-button type="text" size="small" >地图展示</el-button>
                     <el-select v-model="selectValue3" placeholder="显示数目" class="select">
@@ -94,7 +94,7 @@
                         label="操作"
                         >
                             <template slot-scope="scope">
-                                <el-button type="text" @click="handleClick(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
+                                <el-button type="text" @click="editBtn(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
                                 <el-button type="text"><i class="fa fa-trash-o"></i></el-button>
                             </template>
                         </el-table-column>
@@ -116,11 +116,15 @@
                 </div>
             </el-main>
         </el-container>
+        <v-add-dialog :addDialog="showAddTip" @closeDialog="closeAdd"></v-add-dialog>
+        <v-edit-dialog :editDialog="showEditTip" @closeDialog="closeEdit"></v-edit-dialog>
     </div>
 </template>
 
 <script>
     import vTree  from '../../common/treeOne.vue';
+    import vAddDialog from "./addDialog.vue";
+    import vEditDialog from "./editDialog.vue";
     let dataList = [
         {
             name:'设备1',
@@ -245,7 +249,7 @@
     ];
     export default { 
         components:{
-            vTree
+            vTree,vAddDialog,vEditDialog
         },
         data() {
             return {
@@ -257,6 +261,8 @@
                 selectValue2:'',
                 selectValue3:'',
                 inputSeach:'',
+                showAddTip:false,
+                showEditTip:false,
                 treeList:[],
                 multipleSelection:[],
                 pageInfo:{
@@ -281,6 +287,19 @@
             },
             handleClick(index,row) {
                 
+            },
+            //添加按钮
+            addBtn() {
+                this.showAddTip = true;
+            },
+            closeAdd() {
+                this.showAddTip = false;
+            },
+            editBtn() {
+                this.showEditTip = true;
+            },
+            closeEdit() {
+                this.showEditTip = false;
             }
         }
     }

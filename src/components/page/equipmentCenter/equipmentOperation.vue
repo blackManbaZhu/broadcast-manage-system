@@ -114,7 +114,7 @@
                 </div>
             </el-main>
         </el-container>
-        <v-settings v-show="showSettings"></v-settings>
+        <v-settings v-show="showSettings" @Goback="goBack"></v-settings>
     </div>
 </template>
 
@@ -303,6 +303,9 @@
             },
             handleNode(data) {
                 this.checkedTree = data;
+            },
+            goBack() {
+                this.showSettings = false;
             },
             organizationLive() { //机构直播
                 if(this.checkedTree){
