@@ -152,7 +152,6 @@ export default {
            this.$confirm('您确定要返回到设备操作界面吗？', '提示', {type: 'warning'}).then(()=>{
                this.$emit('Goback');
            }).catch(()=>{});
-           
        }
    }
 }

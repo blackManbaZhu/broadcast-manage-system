@@ -1,17 +1,26 @@
 <template>
     <div>
+        <!-- <div class="tip"><span>未分配设备</span></div> -->
         <el-container>
             <el-main>
                 <div class="top">
-                    <el-button type="primary" plain class="add-btn" @click="addMedia()"><i class="fa fa-plus-square"></i>&nbsp; 添加音频</el-button>
+                    <el-button type="primary" plain class="add-btn" @click="back">返回</el-button>
                     <el-input
                         placeholder="请输入名称搜索"
                         prefix-icon="el-icon-search"
                         v-model="inputSeach">
                     </el-input>
-                    <el-select v-model="selectValue1" placeholder="音频类型" class="select">
+                    <el-select v-model="selectValue1" placeholder="全部状态" class="select">
                         <el-option
                         v-for="item in options1"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="selectValue2" placeholder="网络类型" class="select">
+                        <el-option
+                        v-for="item in options2"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -32,28 +41,42 @@
                         </el-table-column>
                         <el-table-column
                         prop="name"
-                        label="名称"
+                        label="设备名称"
                         header-align="center"
-                        width="180">
+                        >
                         </el-table-column>
                         <el-table-column
-                        prop="creator"
-                        label="创建人"
+                        prop="code"
+                        label="设备编号"
                         header-align="center"
-                        width="180">
+                        >
                         </el-table-column>
                         <el-table-column
-                        prop="createTime"
+                        prop="network"
                         header-align="center"
-                        label="创建时间">
+                        label="网络类型">
+                        </el-table-column>
+                        <el-table-column
+                        prop="version"
+                        header-align="center"
+                        label="设备版本">
+                        </el-table-column>
+                        <el-table-column
+                        prop="addTime"
+                        header-align="center"
+                        label="添加时间">
+                        </el-table-column>
+                        <el-table-column
+                        prop="status"
+                        header-align="center"
+                        label="状态">
                         </el-table-column>
                         <el-table-column
                         header-align="center"
                         label="操作"
                         >
                         <template slot-scope="scope">
-                            <el-button type="text"><i class="fa fa-play-circle"></i></el-button>
-                            <el-button type="text" @click="handleClick(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
+                            <el-button type="text" @click="editBtn(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
                             <el-button type="text"><i class="fa fa-trash-o"></i></el-button>
                         </template>
                         </el-table-column>
@@ -69,89 +92,88 @@
                     </el-pagination>
                 </div>
                 <div class="bottom">
-                    <span class="selectSpan">已选择<span>0</span>个音频</span>
-                    <el-button type="primary" plain class="btn"><i class="fa fa-trash-o"></i> 删除选中音频</el-button>
+                    <span class="selectSpan">已选择<span>0</span>个设备</span>
+                    <el-button type="primary" plain class="btn"><i class="fa fa-trash-o"></i> 删除选中设备</el-button>
                 </div>
             </el-main>
         </el-container>
-        <add-media :addMedia="showAdd" @close="closeAdd"></add-media>
+        <v-edit-dialog :editDialog="showEditTip" @closeDialog="closeEdit"></v-edit-dialog>
     </div>
 </template>
 
 <script>
-    import addMedia from "./addMedia.vue"
     let data = [
         {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
-        },
-        {
-            name:'雨蝶.mp3',
-            creator:'xx-xx',
-            createTime:'2018-04-12 12:10:56'
+            name:'设备1',
+            code:'xx-xx',
+            network:'有线',
+            version:'循环',
+            addTime:'2018-03-26 14:00:00',
+            status:'离线'
         }
-    ]
-    let options = [
-            {
-                value:'全部音频',
-                lable:'0'
-            },
-            {
-                value:'录音音频',
-                lable:'1'
-            },
-            {
-                value:'上传音频',
-                lable:'2'
-            }
-        ]
+    ];
+    let option1 = [
+        {
+            value:'全部状态',
+            lable:'0'
+        },
+        {
+            value:'在线',
+            lable:'1'
+        },
+        {
+            value:'在播',
+            lable:'2'
+        },
+        {
+            value:'锁定',
+            lable:'3'
+        },
+        {
+            value:'离线',
+            lable:'4'
+        }
+    ];
+    let option2 = [
+        {
+            value:'全部状态',
+            label:'0'
+        },
+        {
+            value:'在线',
+            label:'1'
+        },
+        {
+            value:'在播',
+            label:'2'
+        },
+        {
+            value:'下载',
+            label:'3'
+        },
+        {
+            value:'锁定',
+            label:'4'
+        },
+        {
+            value:'离线',
+            label:'5'
+        }
+    ];
+    import vEditDialog from "./editDialog.vue";
     export default {
         components:{
-            addMedia
+            vEditDialog
         },
         data() {
             return {
-                options1:options,
+                options1:option1,
+                options2:option2,
                 tableList:data,
                 inputSeach:'',
                 selectValue1:'',
-                showAdd:false,
+                selectValue2:'',
+                showEditTip:false,
                 multipleSelection:[],
                 pageInfo:{
                     total:100,
@@ -166,20 +188,26 @@
             handleCurrentChange(val) {
 
             },
-            handleClick(index,row) {
-            
+            back() {
+                this.$emit('close');
             },
-            addMedia() {
-                this.showAdd = true;
+            editBtn(index,row) {
+                this.showEditTip = true;
             },
-            closeAdd() {
-                this.showAdd = false;
+            closeEdit() {
+                this.showEditTip = false;
             }
         }
     }
 </script>
 
 <style scoped>
+    .tip{
+        line-height: 30px;
+        font-size: 14px;
+        color: #606266;
+        /* float: right; */
+    }
     .el-main {
         height: 620px;
         color: #333;

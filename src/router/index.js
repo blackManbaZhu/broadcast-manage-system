@@ -24,6 +24,7 @@ export default new Router({
                 },
                 {
                     path: '/toManagement',
+                    name:'Management',
                     component: resolve => require(['../components/page/equipmentCenter/equipmentManage.vue'], resolve)
                 },
                 //资源管理
@@ -93,6 +94,10 @@ export default new Router({
         {
             path: '/login',
             component: resolve => require(['../components/page/Login.vue'], resolve)
+        },
+        {
+            path: '/monitor',
+            component: resolve => require(['../components/common/monitoring.vue'], resolve)
         },
     ]
 })

@@ -1,6 +1,6 @@
 <template>
     <div>
-         <el-container>
+         <el-container v-show="!showButed && !showMap && !showInfo">
             <el-aside width="360px" class="left">
                 <div class="tree">
                     <v-tree :datalist="treeList"></v-tree>
@@ -12,8 +12,8 @@
             <el-main class="right">
                 <div class="top">
                     <el-button type="primary" plain @click="addBtn"><i class="fa fa-plus-square"></i>&nbsp; 添加设备</el-button>
-                    <el-button type="text" size="small" >未分配设备</el-button>
-                    <el-button type="text" size="small" >地图展示</el-button>
+                    <el-button type="text" size="small" @click="handleButed">未分配设备</el-button>
+                    <el-button type="text" size="small" @click="handleMap">地图展示</el-button>
                     <el-select v-model="selectValue3" placeholder="显示数目" class="select">
                         <el-option
                         v-for="item in options3"
@@ -111,20 +111,26 @@
                 </div>
                 <div class="bottom">
                     <span class="selectSpan">已选择<span>0</span>个设备</span>
-                    <el-button type="primary" plain>终端信息</el-button>
+                    <el-button type="primary" plain @click="handleInfo">终端信息</el-button>
                     <el-button type="primary" plain><i class="fa fa-trash-o"></i> 删除选中设备</el-button>
                 </div>
             </el-main>
         </el-container>
         <v-add-dialog :addDialog="showAddTip" @closeDialog="closeAdd"></v-add-dialog>
         <v-edit-dialog :editDialog="showEditTip" @closeDialog="closeEdit"></v-edit-dialog>
+        <v-buted v-show="showButed" @close="closeButed"></v-buted>
+        <v-map v-show="showMap" @close="closeMap"></v-map>
+        <v-info v-show="showInfo" @close="closeInfo"></v-info>
     </div>
 </template>
 
 <script>
-    import vTree  from '../../common/treeOne.vue';
-    import vAddDialog from "./addDialog.vue";
+    import vTree       from '../../common/treeOne.vue';
+    import vAddDialog  from "./addDialog.vue";
     import vEditDialog from "./editDialog.vue";
+    import vButed      from "./undistributed.vue";
+    import vMap        from "../../common/map.vue";
+    import vInfo        from "./equipmentInfo.vue";
     let dataList = [
         {
             name:'设备1',
@@ -249,7 +255,7 @@
     ];
     export default { 
         components:{
-            vTree,vAddDialog,vEditDialog
+            vTree,vAddDialog,vEditDialog,vButed,vMap,vInfo
         },
         data() {
             return {
@@ -263,21 +269,31 @@
                 inputSeach:'',
                 showAddTip:false,
                 showEditTip:false,
+                showButed:false,
+                showMap:false,
+                showInfo:false,
                 treeList:[],
                 multipleSelection:[],
                 pageInfo:{
                     total:100,
                     currentPage: 10,
-                }, 
+                }
             }
         },
         created() {
             this.initdata();
+            this.initMonitor();
         },
         methods:{
             initdata() {
                 const list = JSON.parse(localStorage.getItem('data-list')) || [];
                 this.treeList = list;
+            },
+            initMonitor() {
+                const item = this.$route.params.item
+                if(!item && item != undefined){
+                    this.showMap = true;
+                }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -290,16 +306,34 @@
             },
             //添加按钮
             addBtn() {
-                this.showAddTip = true;
+                this.showAddTip  = true;
             },
             closeAdd() {
-                this.showAddTip = false;
+                this.showAddTip  = false;
             },
             editBtn() {
                 this.showEditTip = true;
             },
             closeEdit() {
                 this.showEditTip = false;
+            },
+            handleButed() {
+                this.showButed   = true;
+            },
+            closeButed() {
+                this.showButed   = false;
+            },
+            handleMap() {
+                this.showMap     = true;
+            },
+            closeMap() {
+                this.showMap     = false;
+            },
+            handleInfo() {
+                this.showInfo    = true;
+            },
+            closeInfo() {
+                this.showInfo    = false;
             }
         }
     }

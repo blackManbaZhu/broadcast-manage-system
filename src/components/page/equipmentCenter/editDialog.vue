@@ -22,7 +22,7 @@
 					<el-col :span="8">
 						<div class="grid-content bg-purple">
 							<el-form-item label="网络类型" :label-width="formLabelWidth" prop="networkType">
-								<el-select v-model="form.networkType" placeholder="请选择网络类型">
+								<el-select v-model="form.networkType" placeholder="网络类型">
 									<el-option label="无线" value="无线"></el-option>
 									<el-option label="有线" value="有线"></el-option>
 								</el-select>
@@ -64,6 +64,20 @@
 								change-on-select
 								></el-cascader>
 							</el-form-item>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="grid-content bg-purple">
+							<el-form-item label="所属业务组" :label-width="formLabelWidth">
+								<el-select v-model="form.businessGroup" placeholder="请选择网络类型">
+									<!-- <el-option
+										v-for="item in options"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value">
+									</el-option> -->
+								</el-select>
+    						</el-form-item>
 						</div>
 					</el-col>
 				</el-row>
@@ -115,7 +129,7 @@
         data() {
             return {
 				MapShow:false,
-                formLabelWidth:'80px',
+                formLabelWidth:'100px',
 				editObj:{},
 				form:{
 					number: '',
@@ -124,7 +138,8 @@
 					phone:'',
 					lineStart:'',
 					lineEnd:'',
-					tissue:[]
+					tissue:[],
+					businessGroup:'业务组1'
 				},
 				options: [{
 					value: '机构一',
