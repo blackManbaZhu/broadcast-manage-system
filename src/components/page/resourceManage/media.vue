@@ -53,7 +53,7 @@
                         >
                         <template slot-scope="scope">
                             <el-button type="text"><i class="fa fa-play-circle"></i></el-button>
-                            <el-button type="text" @click="handleClick(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
+                            <el-button type="text" @click="editMedia(scope.$index, scope.row)"><i class="fa fa-edit"></i></el-button>
                             <el-button type="text"><i class="fa fa-trash-o"></i></el-button>
                         </template>
                         </el-table-column>
@@ -69,11 +69,24 @@
                     </el-pagination>
                 </div>
                 <div class="bottom">
-                    <span class="selectSpan">已选择<span>0</span>个音频</span>
+                    <span class="selectSpan">已选择<span>{{multipleSelection.length}}</span>个音频</span>
                     <el-button type="primary" plain class="btn"><i class="fa fa-trash-o"></i> 删除选中音频</el-button>
                 </div>
             </el-main>
         </el-container>
+        <!-- 编辑音频弹窗 -->
+        <el-dialog title="修改音频名称" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+            <el-form :model="form" :rules="rules" ref="form">
+                <el-form-item label="文件名称" :label-width="formLabelWidth" prop="name">
+                <el-input v-model="form.name" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 新增音频弹窗 -->
         <add-media :addMedia="showAdd" @close="closeAdd"></add-media>
     </div>
 </template>
@@ -147,6 +160,8 @@
         },
         data() {
             return {
+                dialogFormVisible:false,
+                formLabelWidth:'80px',
                 options1:options,
                 tableList:data,
                 inputSeach:'',
@@ -156,18 +171,28 @@
                 pageInfo:{
                     total:100,
                     currentPage: 10,
+                },
+                form:{
+                    name:''
+                },
+                rules:{
+                    name:[
+                        { required:true, message:'文件名称必填！',trigger:'blur'}
+                    ]
                 }
             }
         },
         methods:{
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                console.log(val)
             },
             handleCurrentChange(val) {
 
             },
-            handleClick(index,row) {
-            
+            editMedia(index,row) {
+                this.form.name = row.name;
+                this.dialogFormVisible = true;
             },
             addMedia() {
                 this.showAdd = true;
@@ -196,7 +221,7 @@
     .add-btn{
         margin-left: 10px;
     }
-    .el-input{
+    .top .el-input{
         width: auto;
         float: right;
         width: 150px;

@@ -3,7 +3,7 @@
         <el-container>
             <el-main>
                 <div class="top">
-                    <el-button type="primary" plain class="add-btn"><i class="fa fa-plus-square"></i>&nbsp; 新增型号</el-button> 
+                    <el-button type="primary" plain class="add-btn" @click="addModel()"><i class="fa fa-plus-square"></i>&nbsp; 新增型号</el-button> 
                 </div>
                 <div class="table">
                     <el-table
@@ -65,6 +65,24 @@
                 </div>
             </el-main>
         </el-container>
+        <!-- 弹窗 -->
+        <el-dialog title="新增型号" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+            <el-form ref="form" :model="form" label-width="80px" :rules="rules" :status-icon="true">
+                <el-form-item label="型号" prop="model">
+                    <el-input v-model="form.model"></el-input>
+                </el-form-item>
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="说明">
+                    <el-input v-model="form.explain"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="save">创 建</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -98,11 +116,25 @@
     export default {
         data() {
             return {
+                dialogFormVisible:false,
                 tableList:data,
                 multipleSelection:[],
                 pageInfo:{
                     total:100,
                     currentPage: 10,
+                },
+                form:{
+                    model:'',
+                    name:'',
+                    explain:''
+                },
+                rules:{
+                    name:[
+                        {required:true, message:'请输入名称',trigger:'blur'}
+                    ],
+                    model:[
+                        {required:true, message:'请输入型号', trigger:'blur'}
+                    ]
                 }
             }
         },
@@ -115,6 +147,19 @@
             },
             handleClick(index,row) {
             
+            },
+            addModel() {
+                this.dialogFormVisible = true;
+            },
+            save() {
+                this.$refs['form'].validate((valid)=>{
+                    if(valid) {
+                        
+                    }
+                    else{
+                        return false;
+                    }
+                })
             }
         }
     }
@@ -137,7 +182,7 @@
     .add-btn{
         margin-left: 10px;
     }
-    .el-input{
+    .top .el-input{
         width: auto;
         float: right;
         width: 150px;

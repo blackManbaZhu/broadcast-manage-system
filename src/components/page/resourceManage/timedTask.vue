@@ -3,7 +3,7 @@
         <el-container>
             <el-main>
                 <div class="top">
-                    <el-button type="primary" plain class="add-btn"><i class="fa fa-plus-square"></i>&nbsp; 添加任务</el-button>
+                    <el-button type="primary" plain class="add-btn" @click="addTasks"><i class="fa fa-plus-square"></i>&nbsp; 添加任务</el-button>
                     <el-input
                         placeholder="请输入名称搜索"
                         prefix-icon="el-icon-search"
@@ -102,15 +102,17 @@
                     </el-pagination>
                 </div>
                 <div class="bottom">
-                    <span class="selectSpan">已选择<span>0</span>个任务</span>
+                    <span class="selectSpan">已选择<span>{{multipleSelection.length}}</span>个任务</span>
                     <el-button type="primary" plain class="btn"><i class="fa fa-trash-o"></i> 删除选中任务</el-button>
                 </div>
             </el-main>
         </el-container>
+        <add-task :addTask="showAdd" @close="closeAdd"></add-task>
     </div>
 </template>
 
 <script>
+    import addTask from "./addTask.vue";
     let data = [
         {
             name:'定时任务1',
@@ -161,6 +163,7 @@
         }
     ];
     export default {
+        components:{addTask},
         data() {
             return {
                 options1:option1,
@@ -169,6 +172,7 @@
                 inputSeach:'',
                 selectValue1:'',
                 selectValue2:'',
+                showAdd:false,
                 multipleSelection:[],
                 pageInfo:{
                     total:100,
@@ -185,6 +189,12 @@
             },
             handleClick(index,row) {
             
+            },
+            addTasks() {
+                this.showAdd = true;
+            },
+            closeAdd() {
+                this.showAdd = false;
             }
         }
     }

@@ -146,7 +146,7 @@ export default {
      border: 1px solid #eaeaea;
      box-shadow: 0 0 25px #cac6c6;
    }
-   .title {
+   .login .title {
       margin: 0px auto 20px auto;
       text-align: center;
       color: #505458;

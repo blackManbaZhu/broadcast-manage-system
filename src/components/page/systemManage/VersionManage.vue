@@ -3,7 +3,7 @@
         <el-container>
             <el-main>
                 <div class="top">
-                    <el-button type="primary" plain class="add-btn"><i class="fa fa-plus-square"></i>&nbsp; 添加版本信息</el-button>
+                    <el-button type="primary" plain class="add-btn" @click="addVersion()"><i class="fa fa-plus-square"></i>&nbsp; 添加版本信息</el-button>
                     <el-select v-model="selectValue3" placeholder="全部型号" class="select">
                         <el-option
                         v-for="item in options3"
@@ -84,6 +84,38 @@
                 </div>
             </el-main>
         </el-container>
+         <!-- 弹窗 -->
+        <el-dialog title="添加电台" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+            <el-form ref="form" :model="form" label-width="80px" :rules="rules" :status-icon="true">
+                <el-form-item label="版本类型" prop="versionType">
+                    <el-select v-model="form.versionType" placeholder="全部音频" prop="versionType">
+                        <el-option label="终端" value="0"></el-option>
+                        <el-option label="手机" value="1"></el-option>
+                        <el-option label="平板" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="版本号" prop="versionModel">
+                    <el-input v-model="form.versionModel"></el-input>
+                </el-form-item>
+                <el-form-item label="版本文件" prop="versionFile">
+                    <el-upload
+                    v-model="form.versionFile"
+                        ref="upload"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :before-upload="beforeUpload"
+                        :on-remove="onRemove"
+                        :on-exceed="handleExceed"
+                        :limit="1"
+                        >
+                        <el-button size="small" type="primary">选择文件</el-button>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="save">创 建</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -152,6 +184,7 @@
     export default {
         data() {
             return {
+                dialogFormVisible:false,
                 options1:option1,
                 options2:option2,
                 options3:option3,
@@ -162,6 +195,22 @@
                 pageInfo:{
                     total:100,
                     currentPage: 10,
+                },
+                form:{
+                    versionType:'',
+                    versionModel:'',
+                    versionFile:''
+                },
+                rules:{
+                    versionType:[
+                        {required:true, message:'请输入版本类型',trigger:'change'}
+                    ],
+                    versionModel:[
+                        {required:true, message:'请输入版本型号', trigger:'blur'}
+                    ],
+                    versionFile:[
+                        {required:true, message:'请选择版本文件', trigger:'blur'}
+                    ]
                 }
             }
         },
@@ -171,6 +220,28 @@
             },
             handleClick(index,row) {
             
+            },
+            addVersion() {
+                this.dialogFormVisible = true;
+            },
+            save() {
+                this.$refs['form'].validate((valid)=>{
+                    if(valid) {
+                        
+                    }
+                    else{
+                        return false;
+                    }
+                })
+            },
+            beforeUpload() {
+
+            },
+            onRemove() {
+
+            },
+            handleExceed() {
+
             }
         }
     }
@@ -193,7 +264,7 @@
     .add-btn{
         margin-left: 10px;
     }
-    .el-input{
+    .top .el-input{
         width: auto;
         float: right;
         width: 150px;

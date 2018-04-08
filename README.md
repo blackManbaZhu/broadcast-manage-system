@@ -1,13 +1,14 @@
 ﻿# To start
 
- * 使用了webpack2 模块化管理
- * 使用eLemen UI组件
- * 修改了导航栏
- * 增加了用户权限，根据权限列表生成菜单列表
+ * 项目名称：智能应急广播
+ * vue版本 2.0
+ * webpack2 模块化管理
+ * eLemen UI组件
+ * 用户权限
  * 使用了vue-cli脚手架 [vue-cli](https://github.com/vuejs/vue-cli)
 
 ``` bash
-# install dependencies 下载依赖
+# install dependencies
 cnpm install
 
 # serve with hot reload at localhost:8081 运行项目

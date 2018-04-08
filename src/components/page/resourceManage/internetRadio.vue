@@ -3,7 +3,7 @@
         <el-container>
             <el-main>
                 <div class="top">
-                    <el-button type="primary" plain class="add-btn"><i class="fa fa-plus-square"></i>&nbsp; 添加电台</el-button>
+                    <el-button type="primary" plain class="add-btn" @click="addRadio()"><i class="fa fa-plus-square"></i>&nbsp; 添加电台</el-button>
                     <el-input
                         placeholder="输入名称或地址搜索"
                         prefix-icon="el-icon-search"
@@ -55,11 +55,26 @@
                     </el-pagination>
                 </div>
                 <div class="bottom">
-                    <span class="selectSpan">已选择<span>0</span>个电台</span>
+                    <span class="selectSpan">已选择<span>{{multipleSelection.length}}</span>个电台</span>
                     <el-button type="primary" plain class="btn"><i class="fa fa-trash-o"></i> 删除选中电台</el-button>
                 </div>
             </el-main>
         </el-container>
+        <!-- 弹窗 -->
+        <el-dialog title="添加电台" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+            <el-form ref="form" :model="form" label-width="80px" :rules="rules" :status-icon="true">
+                <el-form-item label="电台名称" prop="name">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="电台地址" prop="address">
+                    <el-input v-model="form.address"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="save">创 建</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -109,6 +124,7 @@
     export default {
         data() {
             return {
+                dialogFormVisible:false,
                 tableList:data,
                 inputSeach:'',
                 selectValue1:'',
@@ -116,6 +132,18 @@
                 pageInfo:{
                     total:100,
                     currentPage: 10,
+                },
+                form:{
+                    name:'',
+                    address:''
+                },
+                rules:{
+                    name:[
+                        {required:true, message:'请输入电台名称',trigger:'blur'}
+                    ],
+                    address:[
+                        {required:true, message:'请输入电台地址', trigger:'blur'}
+                    ]
                 }
             }
         },
@@ -128,6 +156,19 @@
             },
             handleClick(index,row) {
             
+            },
+            addRadio() {
+                this.dialogFormVisible = true;
+            },
+            save(){
+                this.$refs['form'].validate((valid)=>{
+                    if(valid) {
+                        
+                    }
+                    else{
+                        return false;
+                    }
+                })
             }
         }
     }
@@ -150,7 +191,7 @@
     .add-btn{
         margin-left: 10px;
     }
-    .el-input{
+    .top .el-input{
         width: auto;
         float: right;
         width: 200px;

@@ -17,8 +17,8 @@
                 </el-upload>
             <!-- </el-form> -->
             <div slot="footer" class="dialog-footer">
-                <el-button @click="cancel">取消上传</el-button>
-                <el-button type="success" @click="submitUpload">上传到服务器</el-button>
+                <el-button @click="cancel">取 消</el-button>
+                <el-button type="success" @click="submitUpload">上 传</el-button>
                 <el-button type="primary" @click="save">创 建</el-button>
             </div>
         </el-dialog>
@@ -32,13 +32,12 @@
         ],
         data() {
             return {
-                formLabelWidth: '120px',
                 fileType:''
             }
         },
         methods:{
             handleExceed(files, fileList) { //选择限制
-                console.log(files);
+                // console.log(files);
                 this.$message.warning(`当前限制选择1个文件`);
             },
             onRemove() {
@@ -50,7 +49,7 @@
                 && this.fileType != 'wma' && this.fileType != 'ogg' && this.fileType != 'amr'
                 && this.fileType != '3gp'
                 ){
-                    this.$message.error(`上传失败！当前文件格式不正确!`);
+                    this.$message.error(`添加失败！当前文件格式不正确!`);
                     this.fileType = '';
                     return false;
                 }
